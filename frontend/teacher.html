@@ -1,0 +1,43 @@
+<h2>Teacher Panel</h2>
+
+<h3>Register Student</h3>
+<input id="index" placeholder="Index">
+<input id="phone" placeholder="Parent Phone">
+<input id="fee" placeholder="Total Fee">
+<input id="grade" placeholder="Grade (10,11,12)">
+<button onclick="register()">Register</button>
+
+<h3>Add Payment</h3>
+<input id="pIndex" placeholder="Index">
+<input id="amount" placeholder="Amount">
+<button onclick="pay()">Add Payment</button>
+
+<script>
+async function register() {
+  await fetch("http://localhost:3000/register", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      index: document.getElementById("index").value,
+      parentPhone: document.getElementById("phone").value,
+      totalFee: document.getElementById("fee").value,
+      grade: document.getElementById("grade").value
+    })
+  });
+
+  alert("Student registered");
+}
+
+async function pay() {
+  await fetch("http://localhost:3000/pay", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      index: document.getElementById("pIndex").value,
+      amount: document.getElementById("amount").value
+    })
+  });
+
+  alert("Payment added");
+}
+</script>

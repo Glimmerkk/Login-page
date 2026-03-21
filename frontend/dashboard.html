@@ -1,0 +1,48 @@
+<div class="topbar">
+  <span onclick="toggleMenu()">☰</span>
+  <h2>Sugutek Junior Secondary School</h2>
+</div>
+
+<div class="sidebar" id="sidebar">
+  <p onclick="loadFees()">Fees</p>
+  <p onclick="loadResults()">Results</p>
+  <p onclick="loadCalendar()">Calendar</p>
+</div>
+
+<div id="content">
+  <h2>Welcome Student</h2>
+</div>
+
+<script>
+const index = localStorage.getItem("index");
+
+function toggleMenu() {
+  document.getElementById("sidebar").classList.toggle("active");
+}
+
+async function loadFees() {
+  const res = await fetch(`http://localhost:3000/student?index=${index}`);
+  const data = await res.json();
+
+  document.getElementById("content").innerHTML = `
+    <h2>Grade ${data.grade}</h2>
+    <p>Total Fee: ${data.totalFee}</p>
+    <p>Paid: ${data.paid}</p>
+    <p>Balance: ${data.balance}</p>
+  `;
+}
+
+async function loadResults() {
+  const res = await fetch(`http://localhost:3000/student?index=${index}`);
+  const data = await res.json();
+
+  document.getElementById("content").innerHTML = `<h2>${data.results}</h2>`;
+}
+
+async function loadCalendar() {
+  const res = await fetch(`http://localhost:3000/student?index=${index}`);
+  const data = await res.json();
+
+  document.getElementById("content").innerHTML = `<h2>${data.calendar}</h2>`;
+}
+</script>

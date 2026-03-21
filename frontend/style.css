@@ -1,0 +1,43 @@
+body {
+  font-family: Arial;
+}
+
+/* TOP BAR */
+.topbar {
+  background: #002147;
+  color: white;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  left: -200px;
+  top: 0;
+  width: 200px;
+  height: 100%;
+  background: #003366;
+  color: white;
+  padding-top: 60px;
+  transition: 0.3s;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar p {
+  padding: 15px;
+  cursor: pointer;
+}
+
+.sidebar p:hover {
+  background: #00509e;
+}
+
+/* CONTENT */
+#content {
+  padding: 20px;
+}
