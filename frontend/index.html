@@ -1,69 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-
-  <!-- CSS -->
+  <title>Student Login</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- Icons -->
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
-
 <body>
 
-  <div class="wrapper">
-    <form>
-      <h1>Login</h1>
+<div class="wrapper">
+  <h1>Student Login</h1>
 
-      <div class="input-box">
-        <input type="text" placeholder="Index Number" required>
-        <i class='bx bxs-user'></i>
-      </div>
+  <form>
+    <div class="input-box">
+      <input type="text" placeholder="Index Number" required>
+    </div>
 
-      <div class="input-box">
-        <input type="password" placeholder="Parent Phone" required>
-        <i class='bx bxs-lock-alt'></i>
-      </div>
+    <div class="input-box">
+      <input type="password" placeholder="Parent Phone" required>
+    </div>
 
-      <button type="submit" class="btn">Login</button>
+    <button class="btn">Login</button>
+  </form>
+</div>
 
-      <div class="register-link">
-        <p>Don't have an account? <a href="register.html">Register</a></p>
-      </div>
-    </form>
-  </div>
+<script>
+document.querySelector("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-  <!-- LOGIN SCRIPT -->
-  <script>
-  document.querySelector("form").addEventListener("submit", async (e) => {
-    e.preventDefault();
+  const index = document.querySelector('input[placeholder="Index Number"]').value;
+  const parentPhone = document.querySelector('input[placeholder="Parent Phone"]').value;
 
-    const index = document.querySelector('input[placeholder="Index Number"]').value;
-    const parentPhone = document.querySelector('input[placeholder="Parent Phone"]').value;
-
-    const res = await fetch("https://school-system-7s0w.onrender.com/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        index,
-        parentPhone
-      })
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      window.location.href = "dashboard.html";
-    } else {
-      alert("Invalid login");
-    }
+  const res = await fetch("https://school-system-7s0w.onrender.com/login", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ index, parentPhone })
   });
-  </script>
+
+  const data = await res.json();
+
+  if (data.success) {
+    localStorage.setItem("index", index);
+    window.location.href = "dashboard.html";
+  } else {
+    alert("Invalid login. Contact teacher.");
+  }
+});
+</script>
 
 </body>
 </html>

@@ -1,6 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
 <div class="topbar">
   <span onclick="toggleMenu()">☰</span>
-  <h2>Sugutek Junior Secondary School</h2>
+  Sugutek School
 </div>
 
 <div class="sidebar" id="sidebar">
@@ -16,33 +24,36 @@
 <script>
 const index = localStorage.getItem("index");
 
-function toggleMenu() {
-  document.getElementById("sidebar").classList.toggle("active");
+function toggleMenu(){
+  sidebar.classList.toggle("active");
 }
 
-async function loadFees() {
-  const res = await fetch(`http://localhost:3000/student?index=${index}`);
-  const data = await res.json();
+async function loadFees(){
+  const res = await fetch(`https://school-system-7s0w.onrender.com/student?index=${index}`);
+  const d = await res.json();
 
-  document.getElementById("content").innerHTML = `
-    <h2>Grade ${data.grade}</h2>
-    <p>Total Fee: ${data.totalFee}</p>
-    <p>Paid: ${data.paid}</p>
-    <p>Balance: ${data.balance}</p>
+  content.innerHTML = `
+    <h2>Fees</h2>
+    <p>Total: ${d.totalFee}</p>
+    <p>Paid: ${d.paid}</p>
+    <p>Balance: ${d.balance}</p>
   `;
 }
 
-async function loadResults() {
-  const res = await fetch(`http://localhost:3000/student?index=${index}`);
-  const data = await res.json();
+async function loadResults(){
+  const res = await fetch(`https://school-system-7s0w.onrender.com/student?index=${index}`);
+  const d = await res.json();
 
-  document.getElementById("content").innerHTML = `<h2>${data.results}</h2>`;
+  content.innerHTML = `<h2>${d.results}</h2>`;
 }
 
-async function loadCalendar() {
+async function loadCalendar(){
   const res = await fetch(`https://school-system-7s0w.onrender.com/student?index=${index}`);
-  const data = await res.json();
+  const d = await res.json();
 
-  document.getElementById("content").innerHTML = `<h2>${data.calendar}</h2>`;
+  content.innerHTML = `<h2>${d.calendar}</h2>`;
 }
 </script>
+
+</body>
+</html>
