@@ -124,6 +124,10 @@ app.get("/students-by-grade", async (req, res) => {
   res.json(data);
 });
 
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
+
 // ✅ TEST ROUTE
 app.get("/test", async (req, res) => {
   const { data, error } = await supabase
