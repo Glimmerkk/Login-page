@@ -29,7 +29,7 @@ async function register() {
 }
 
 async function pay() {
-  await fetch("http://localhost:3000/pay", {
+  await fetch("https://school-system-7s0w.onrender.com/pay", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({

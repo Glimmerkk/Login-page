@@ -1,34 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Register</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+<script>
+document.querySelector("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-<body>
+  const index = document.querySelector('input[placeholder="Index Number"]').value;
+  const parentPhone = document.querySelector('input[placeholder="Parent Phone"]').value;
+  const totalFee = document.querySelector('input[placeholder="Total Fee"]').value;
+  const grade = document.querySelector('input[placeholder="Grade"]').value;
 
-  <div class="wrapper">
-    <form>
-      <h1>Register</h1>
+  const res = await fetch("https://school-system-7s0w.onrender.com/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      index,
+      parentPhone,
+      totalFee,
+      grade
+    })
+  });
 
-
-      <div class="input-box">
-        <input type="email" placeholder="Email/Username" required>
-      </div>
-
-      <div class="input-box">
-        <input type="password" placeholder="Password" required>
-      </div>
-
-      <div class="input-box">
-  <input type="password" placeholder="Confirm Password" required>
-  <i class='bx bxs-lock-alt'></i>
-</div>
-
-      <button type="submit" class="btn">Register</button>
-    </form>
-  </div>
-
-</body>
-</html>
+  const data = await res.text();
+  alert(data);
+});
+</script>

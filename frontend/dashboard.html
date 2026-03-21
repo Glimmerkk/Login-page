@@ -40,7 +40,7 @@ async function loadResults() {
 }
 
 async function loadCalendar() {
-  const res = await fetch(`http://localhost:3000/student?index=${index}`);
+  const res = await fetch(`https://school-system-7s0w.onrender.com/student?index=${index}`);
   const data = await res.json();
 
   document.getElementById("content").innerHTML = `<h2>${data.calendar}</h2>`;
