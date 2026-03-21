@@ -1,32 +1,27 @@
-<form onsubmit="login(event)">
-  <h1>Student Login</h1>
-
-  <input id="index" placeholder="Index Number" required>
-  <input id="phone" placeholder="Parent Phone" required>
-
-  <button type="submit">Login</button>
-</form>
-
 <script>
-async function login(e) {
+document.querySelector("form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const index = document.getElementById("index").value;
-  const phone = document.getElementById("phone").value;
+  const index = document.querySelector('input[placeholder="Index Number"]').value;
+  const parentPhone = document.querySelector('input[placeholder="Parent Phone"]').value;
 
-  const res = await fetch("http://localhost:3000/login", {
+  const res = await fetch("https://school-system-7s0w.onrender.com/login", {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ index, parentPhone: phone })
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      index,
+      parentPhone
+    })
   });
 
   const data = await res.json();
 
   if (data.success) {
-    localStorage.setItem("index", index);
     window.location.href = "dashboard.html";
   } else {
-    alert("Wrong details");
+    alert("Invalid login");
   }
-}
+});
 </script>
