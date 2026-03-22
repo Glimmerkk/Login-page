@@ -47,13 +47,14 @@ const { error } = await supabase.from("students").insert([
 app.post("/login", async (req, res) => {
   const { index, parentPhone } = req.body;
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("students")
     .select("*")
     .eq("index", index)
-    .eq("parentPhone", parentPhone);
+    .eq("parent_phone", parentPhone) // ✅ FIXED
+    .single();
 
-  if (!data || data.length === 0) {
+  if (error || !data) {
     return res.json({ success: false });
   }
 
