@@ -1,58 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
-<div class="topbar">
-  <span onclick="toggleMenu()">☰</span>
-  Sugutek School
-</div>
+<div class="dashboard-container">
 
-<div class="sidebar" id="sidebar">
-  <p onclick="loadFees()">Fees</p>
-  <p onclick="loadResults()">Results</p>
-  <p onclick="loadCalendar()">Calendar</p>
-</div>
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Sugutek Junior Secondary School</h1>
+    <p class="slogan">"Together We Can Achieve Excellence"</p>
+  </div>
 
-<div id="content">
-  <h2>Welcome Student</h2>
+  <!-- FEES -->
+  <div class="card">
+    <h2>💰 Fees Summary</h2>
+    <p>Total Fee: <span id="totalFee"></span></p>
+    <p>Paid: <span id="paid"></span></p>
+    <p>Balance: <span id="balance"></span></p>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="card">
+    <h2>📊 Results</h2>
+    <div id="results">
+      <p>No results posted yet</p>
+    </div>
+  </div>
+
+  <!-- COMMENTS -->
+  <div class="card">
+    <h2>📝 Comments</h2>
+    <p><strong>Teacher:</strong> <span id="teacherComment">No comment</span></p>
+    <p><strong>Parent:</strong> <span id="parentComment">No comment</span></p>
+  </div>
+
+  <!-- PERFORMANCE GRAPH -->
+  <div class="card">
+    <h2>📈 Performance</h2>
+    <canvas id="chart"></canvas>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="card">
+    <h2>📅 School Calendar</h2>
+    <p id="calendar"></p>
+  </div>
+
 </div>
 
 <script>
 const index = localStorage.getItem("index");
 
-function toggleMenu(){
-  sidebar.classList.toggle("active");
-}
-
-async function loadFees(){
+async function loadData() {
   const res = await fetch(`https://school-system-7s0w.onrender.com/student?index=${index}`);
-  const d = await res.json();
+  const data = await res.json();
 
-  content.innerHTML = `
-    <h2>Fees</h2>
-    <p>Total: ${d.totalFee}</p>
-    <p>Paid: ${d.paid}</p>
-    <p>Balance: ${d.balance}</p>
-  `;
+  document.getElementById("totalFee").innerText = data.totalFee;
+  document.getElementById("paid").innerText = data.paid;
+  document.getElementById("balance").innerText = data.balance;
+
+  document.getElementById("calendar").innerText = data.calendar;
+
+  // RESULTS
+  if (Object.keys(data.results).length === 0) {
+    document.getElementById("results").innerHTML = "<p>No results posted yet</p>";
+  } else {
+    let html = "";
+    for (let subject in data.results) {
+      html += `<p>${subject}: ${data.results[subject]}</p>`;
+    }
+    document.getElementById("results").innerHTML = html;
+  }
+
+  // GRAPH
+  const ctx = document.getElementById('chart');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(data.results),
+      datasets: [{
+        label: 'Marks',
+        data: Object.values(data.results)
+      }]
+    }
+  });
 }
 
-async function loadResults(){
-  const res = await fetch(`https://school-system-7s0w.onrender.com/student?index=${index}`);
-  const d = await res.json();
-
-  content.innerHTML = `<h2>${d.results}</h2>`;
-}
-
-async function loadCalendar(){
-  const res = await fetch(`https://school-system-7s0w.onrender.com/student?index=${index}`);
-  const d = await res.json();
-
-  content.innerHTML = `<h2>${d.calendar}</h2>`;
-}
+loadData();
 </script>
 
 </body>
