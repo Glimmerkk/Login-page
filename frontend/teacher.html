@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teacher Panel</title>
-
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
@@ -14,96 +11,48 @@
 
   <h1>Teacher Panel</h1>
 
-  <!-- REGISTER STUDENT -->
-  <div class="card">
-    <h3>Register Student</h3>
+  <h3>Register Student</h3>
+  <input id="index" placeholder="Index Number">
+  <input id="phone" placeholder="Parent Phone">
+  <input id="fee" placeholder="Total Fee">
+  <input id="grade" placeholder="Grade (10,11,12)">
+  <button class="btn" onclick="register()">Register</button>
 
-    <input id="index" placeholder="Index Number">
-    <input id="phone" placeholder="Parent Phone">
-    <input id="fee" placeholder="Total Fee">
-    <input id="grade" placeholder="Grade (10,11,12)">
-
-    <button class="btn" onclick="register()">Register Student</button>
-  </div>
-
-  <!-- ADD PAYMENT -->
-  <div class="card">
-    <h3>Add Payment</h3>
-
-    <input id="pIndex" placeholder="Index Number">
-    <input id="amount" placeholder="Amount">
-
-    <button class="btn" onclick="pay()">Add Payment</button>
-  </div>
+  <h3>Add Payment</h3>
+  <input id="pIndex" placeholder="Index Number">
+  <input id="amount" placeholder="Amount">
+  <button class="btn" onclick="pay()">Add Payment</button>
 
 </div>
 
 <script>
-
-// ✅ REGISTER STUDENT
 async function register() {
-  const index = document.getElementById("index").value;
-  const parentPhone = document.getElementById("phone").value;
-  const totalFee = document.getElementById("fee").value;
-  const grade = document.getElementById("grade").value;
+  await fetch("https://school-system-7s0w.onrender.com/register", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      index: index.value,
+      parentPhone: phone.value,
+      totalFee: fee.value,
+      grade: grade.value
+    })
+  });
 
-  if (!index || !parentPhone || !totalFee || !grade) {
-    alert("Please fill all fields");
-    return;
-  }
-
-  try {
-    const res = await fetch("https://school-system-7s0w.onrender.com/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        index,
-        parentPhone,
-        totalFee,
-        grade
-      })
-    });
-
-    const data = await res.text();
-    alert(data);
-
-  } catch (error) {
-    alert("Error connecting to server");
-  }
+  alert("Student registered");
 }
 
-// ✅ ADD PAYMENT
 async function pay() {
-  const index = document.getElementById("pIndex").value;
-  const amount = document.getElementById("amount").value;
+  await fetch("https://school-system-7s0w.onrender.com/pay", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      index: pIndex.value,
+      amount: amount.value
+    })
+  });
 
-  if (!index || !amount) {
-    alert("Enter index and amount");
-    return;
-  }
-
-  try {
-    const res = await fetch("https://school-system-7s0w.onrender.com/pay", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        index,
-        amount
-      })
-    });
-
-    const data = await res.text();
-    alert(data);
-
-  } catch (error) {
-    alert("Error connecting to server");
-  }
+  alert("Payment added");
 }
-
 </script>
 
 </body>

@@ -3,97 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Dashboard</title>
-<link rel="stylesheet" href="style.css">
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="./style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
 
+<!-- MENU BUTTON -->
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <h2>Menu</h2>
+  <p onclick="showSection('fees')">💰 Fees</p>
+  <p onclick="showSection('results')">📊 Results</p>
+  <p onclick="showSection('calendar')">📅 Calendar</p>
+  <p onclick="logout()">🚪 Logout</p>
+</div>
+
+<!-- MAIN -->
 <div class="dashboard-container">
 
-  <!-- HEADER -->
   <div class="header">
-    <h1>Sugutek Junior Secondary School</h1>
+    <h1>Sugutek JSS</h1>
     <p class="slogan">"Together We Can Achieve Excellence"</p>
   </div>
 
-  <!-- FEES -->
-  <div class="card">
-    <h2>💰 Fees Summary</h2>
-    <p>Total Fee: <span id="totalFee"></span></p>
-    <p>Paid: <span id="paid"></span></p>
-    <p>Balance: <span id="balance"></span></p>
-  </div>
-
-  <!-- RESULTS -->
-  <div class="card">
-    <h2>📊 Results</h2>
-    <div id="results">
-      <p>No results posted yet</p>
-    </div>
-  </div>
-
-  <!-- COMMENTS -->
-  <div class="card">
-    <h2>📝 Comments</h2>
-    <p><strong>Teacher:</strong> <span id="teacherComment">No comment</span></p>
-    <p><strong>Parent:</strong> <span id="parentComment">No comment</span></p>
-  </div>
-
-  <!-- PERFORMANCE GRAPH -->
-  <div class="card">
-    <h2>📈 Performance</h2>
-    <canvas id="chart"></canvas>
-  </div>
-
-  <!-- CALENDAR -->
-  <div class="card">
-    <h2>📅 School Calendar</h2>
-    <p id="calendar"></p>
-  </div>
+  <div id="content"></div>
 
 </div>
 
 <script>
+const sidebar = document.getElementById("sidebar");
+const content = document.getElementById("content");
 const index = localStorage.getItem("index");
+
+function toggleMenu() {
+  sidebar.classList.toggle("active");
+}
+
+function logout() {
+  localStorage.removeItem("index");
+  window.location.href = "index.html";
+}
 
 async function loadData() {
   const res = await fetch(`https://school-system-7s0w.onrender.com/student?index=${index}`);
-  const data = await res.json();
-
-  document.getElementById("totalFee").innerText = data.totalFee;
-  document.getElementById("paid").innerText = data.paid;
-  document.getElementById("balance").innerText = data.balance;
-
-  document.getElementById("calendar").innerText = data.calendar;
-
-  // RESULTS
-  if (Object.keys(data.results).length === 0) {
-    document.getElementById("results").innerHTML = "<p>No results posted yet</p>";
-  } else {
-    let html = "";
-    for (let subject in data.results) {
-      html += `<p>${subject}: ${data.results[subject]}</p>`;
-    }
-    document.getElementById("results").innerHTML = html;
-  }
-
-  // GRAPH
-  const ctx = document.getElementById('chart');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: Object.keys(data.results),
-      datasets: [{
-        label: 'Marks',
-        data: Object.values(data.results)
-      }]
-    }
-  });
+  return await res.json();
 }
 
-loadData();
+/* ================= SECTIONS ================= */
+
+async function showSection(type) {
+  const data = await loadData();
+
+  const total = data.totalFee || 0;
+  const paid = data.paid || 0;
+  const balance = total - paid;
+
+  /* FEES */
+  if (type === "fees") {
+    content.innerHTML = `
+      <div class="grid">
+        <div class="card"><h3>Total Fee</h3><p>${total}</p></div>
+        <div class="card"><h3>Paid</h3><p>${paid}</p></div>
+        <div class="card"><h3>Balance</h3><p>${balance}</p></div>
+      </div>
+    `;
+  }
+
+  /* RESULTS */
+  if (type === "results") {
+
+    if (!data.results || data.results === "No results yet") {
+      content.innerHTML = `
+        <div class="card">
+          <h2>No Results Posted Yet</h2>
+        </div>
+      `;
+      return;
+    }
+
+    content.innerHTML = `
+      <div class="card">
+        <h2>Results</h2>
+        <canvas id="chart"></canvas>
+      </div>
+    `;
+
+    new Chart(document.getElementById("chart"), {
+      type: "bar",
+      data: {
+        labels: Object.keys(data.results),
+        datasets: [{
+          label: "Marks",
+          data: Object.values(data.results)
+        }]
+      }
+    });
+  }
+
+  /* CALENDAR */
+  if (type === "calendar") {
+    content.innerHTML = `
+      <div class="card">
+        <h2>School Calendar</h2>
+        <div class="calendar">
+          ${generateCalendar()}
+        </div>
+      </div>
+    `;
+  }
+}
+
+/* ================= CALENDAR GENERATOR ================= */
+
+function generateCalendar() {
+  let days = "";
+
+  for (let i = 1; i <= 30; i++) {
+    let special = (i === 10 || i === 20) ? "highlight" : "";
+    days += `<div class="day ${special}">${i}</div>`;
+  }
+
+  return days;
+}
+
+/* DEFAULT */
+showSection("fees");
 </script>
 
 </body>

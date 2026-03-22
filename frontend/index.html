@@ -1,44 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Student Login</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Login</title>
+
+<link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
 
 <div class="wrapper">
   <h1>Student Login</h1>
 
-  <form>
+  <form id="loginForm">
     <div class="input-box">
-      <input type="text" placeholder="Index Number" required>
+      <input type="text" id="index" placeholder="Index Number" required>
     </div>
 
     <div class="input-box">
-      <input type="password" placeholder="Parent Phone" required>
+      <input type="password" id="phone" placeholder="Parent Phone" required>
     </div>
 
     <button class="btn">Login</button>
+
+    <div class="register-link">
+      <p>Don't have an account? <a href="register.html">Register</a></p>
+    </div>
   </form>
 </div>
 
 <script>
-document.querySelector("form").addEventListener("submit", async (e) => {
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  const index = document.querySelector('input[placeholder="Index Number"]').value;
-  const parentPhone = document.querySelector('input[placeholder="Parent Phone"]').value;
 
   const res = await fetch("https://school-system-7s0w.onrender.com/login", {
     method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ index, parentPhone })
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      index: index.value,
+      parentPhone: phone.value
+    })
   });
 
   const data = await res.json();
 
   if (data.success) {
-    localStorage.setItem("index", index);
+    localStorage.setItem("index", index.value);
     window.location.href = "dashboard.html";
   } else {
     alert("Invalid login. Contact teacher.");
