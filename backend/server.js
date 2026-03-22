@@ -26,17 +26,17 @@ app.post("/register", async (req, res) => {
     return res.send("Student already exists");
   }
 
-  const { error } = await supabase.from("students").insert([
-    {
-      index,
-      parentPhone,
-      totalFee: Number(totalFee),
-      paid: 0,
-      grade,
-      results: {},
-      calendar: "School opens Jan 10"
-    }
-  ]);
+const { error } = await supabase.from("students").insert([
+  {
+    index,
+    parent_phone: parentPhone,
+    total_fee: Number(totalFee),
+    paid: 0,
+    grade,
+    results: "No results yet",
+    calendar: "School opens Jan 10"
+  }
+]);
 
   if (error) return res.send(error.message);
 
